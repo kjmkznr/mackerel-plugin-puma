@@ -1,0 +1,19 @@
+sudo: false
+language: go
+go:
+  - 1.7
+script:
+  - make test vet
+before_deploy:
+  - make build
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: QlygVLLNAp9D7sX/rait/YbjLFwP1uF9QNYhiq2KlqHUXstf1cnCH0CXTmmPrx3C9R8oTnLoCjsKcqW8Y4Cqhj7cd4M0EIeAH3sMT0GAWw16WSNqE4k8TpQkRI044sA29dxA5LDsgMbv1rgbEDbd/K8/HsERs/MZ3mqY5pXVUjRRRIMEaFiCsq7WRCSdnQhBjOU10TY5+4OkicEtGfFM//BOOz2PYbPdAgOcUw74HnKour0QIOD2347TPRH2Kk4B+g3y0zUwARU151GuXOxYBAGm8uOSTgHIl1NElmV3DYfzbPnSEr0u9tz1dJkd0JQuvvm+UPxNdbaSxhkwixnQuUjePU3ZZeCRPVp+A5HHtXed3spwM0L1Dmpv25AfRHk9/AJkuQ+lcTewxUxJ3F15jgKb/B/NS0c7AveU2xekM0SI6G4qp8YOOyJ5lWxyxRXCvOve4NsqvGjvOg2qwMXP2uTmaYSdqy5qHw68m+oiQU+y3WjXpwRtBenF0v/5kVEn3/FYnciOFGIS4V3UW3bVnF3/MTQ3/0AwRFfY2upL76QCv/T1zuUIjFjA+Eotr2krQovVNC5twCJcD/yEj/5zhIE8q6yPTLdjbJSrvDytYccX+DLBEfVEkEJyh2Ao5RsHa3IqMVI0IZBNi06lhjzySDJEXyF65EsLRQ6mTmgmvwQ=
+  file_glob: true
+  file: mackerel-plugin-puma
+  on:
+    all_branches: true
+    tags: true
