@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"flag"
 	"io"
+	"io/ioutil"
 	"net"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"gopkg.in/yaml.v2"
 
 	mp "github.com/mackerelio/go-mackerel-plugin-helper"
 )
@@ -17,6 +20,13 @@ type PumaPlugin struct {
 	StateFile string
 	Token     string
 	Prefix    string
+}
+
+// PumaState ...
+type PumaState struct {
+	ControlURL       string `yaml:"control_url"`
+	ControlAuthToken string `yaml:"control_auth_token"`
+	PID              uint32 `yaml:"pid"`
 }
 
 /*
@@ -101,17 +111,27 @@ func (m PumaPlugin) GraphDefinition() map[string]mp.Graphs {
 	}
 }
 
-func (m PumaPlugin) unixDial(proto, addr string) (conn net.Conn, err error) {
-	return net.Dial("unix", m.StateFile)
-}
-
 // FetchMetrics interface for mackerelplugin
 func (m PumaPlugin) FetchMetrics() (map[string]interface{}, error) {
+	state := PumaState{}
+
+	data, err := ioutil.ReadFile(m.StateFile)
+	if err != nil {
+		return nil, err
+	}
+	err = yaml.Unmarshal([]byte(data), &state)
+	if err != nil {
+		return nil, err
+	}
+
 	transport := http.Transport{
-		Dial: m.unixDial,
+		Dial: func(proto, addr string) (conn net.Conn, err error) {
+			controlURL := strings.Replace(state.ControlURL, "unix://", "", 1)
+			return net.Dial("unix", controlURL)
+		},
 	}
 	client := &http.Client{Transport: &transport}
-	resp, err := client.Get("http://puma/stats?token=" + m.Token)
+	resp, err := client.Get("http://puma/stats?token=" + state.ControlAuthToken)
 	if err != nil {
 		return nil, err
 	}
