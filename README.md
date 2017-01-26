@@ -3,6 +3,8 @@ mackerel-plugin-puma
 
 puma custom metrics plugin for mackerel.io agent.
 
+[![Build Status](https://travis-ci.org/kjmkznr/mackerel-plugin-puma.svg?branch=master)](https://travis-ci.org/kjmkznr/mackerel-plugin-puma)
+
 ## Synopsis
 
 ```shell
