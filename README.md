@@ -6,7 +6,7 @@ puma custom metrics plugin for mackerel.io agent.
 ## Synopsis
 
 ```shell
-mackerel-plugin-puma -state=<socket file> -token=<puma control token> [-metric-key-prefix=gostats]
+mackerel-plugin-puma -state=<socket file> -token=<puma control token> [-metric-key-prefix=puma]
 ```
 
 ## Example of mackerel-agent.conf
