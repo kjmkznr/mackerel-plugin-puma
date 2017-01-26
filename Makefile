@@ -6,7 +6,7 @@ GOFMT_FILES?=$$(find . -name '*.go' | grep -v vendor)
 default: test vet
 
 ${TARGET}: prepare 
-	go build
+	go build -ldflags="-s"
 
 build: ${TARGET}
 
